@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
-import { Layout, Select } from "antd";
+import { Layout, Radio } from "antd";
 import { Content, Footer } from "antd/es/layout/layout";
 import NavigationBar from "./components/NavigationBar";
 import MyFooter from "./components/Footer";
 import NavigationRoutes from "./components/NavigationRoutes";
-import Search from "antd/es/input/Search";
+import { SearchPlace } from "./components/SearchPlace";
 import type { SearchProps } from "antd/es/input/Search";
 import axios from "axios";
 import weather from "./assets/weather_example.json";
@@ -15,8 +15,8 @@ const APIKey = "9B6QVFSDBPLEPQ6JQK7K4ADRA";
 
 function App() {
   const [place, setPlace] = useState<string>("Osijek");
-  const [searchValue, setSearchValue] = useState<string>("");
   const [weatherData, setWeatherData] = useState<any>(null);
+  const [unit, setUnit] = useState<"C" | "F">("C");
 
   useEffect(() => {
     axios
@@ -38,7 +38,6 @@ function App() {
   const contentStyle: React.CSSProperties = {
     textAlign: "center",
     minHeight: 120,
-    lineHeight: "120px",
     background:
       "radial-gradient(circle, rgb(252, 250, 250) 0%, rgb(100, 100, 100) 100%)",
   };
@@ -55,26 +54,39 @@ function App() {
     overflow: "hidden",
   };
 
-  const onSearch: SearchProps["onSearch"] = (value) => {
-    setPlace(searchValue);
-    setSearchValue("");
+  const handleOnSearchChange = (searchData: any) => {
+    setPlace(searchData.value);
+    console.log(searchData);
+  };
+
+  const convertToF = (tempC: any) => {
+    return (tempC * 9) / 5 + 32;
   };
 
   return (
     <div className="App">
       <Layout style={layoutStyle}>
         <NavigationBar />
+        <Radio.Group
+          options={[
+            { label: "C", value: "C" },
+            { label: "F", value: "F" },
+          ]}
+          onChange={({ target: { value } }: any) => {
+            setUnit(value);
+          }}
+          value={unit}
+          optionType="button"
+          style={{ position: "absolute", top: "0.5rem", right: "0.5rem" }}
+          buttonStyle="solid"
+        />
         <Content style={contentStyle}>
-          <Search
-            placeholder="Search city..."
-            allowClear
-            onSearch={onSearch}
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            style={{ width: "50%", marginTop: "2rem" }}
+          <SearchPlace onSearchChange={handleOnSearchChange} />
+          <NavigationRoutes
+            weatherData={weatherData}
+            unit={unit}
+            convertToF={convertToF}
           />
-
-          <NavigationRoutes weatherData={weatherData} />
         </Content>
         <Footer style={footerStyle}>
           <MyFooter />

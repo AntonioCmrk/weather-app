@@ -1,0 +1,7 @@
+.selectable:hover {
+  background-color: hsl(0, 0%, 90%);
+  border-radius: 1rem;
+}
+.selectable {
+  padding: 1rem;
+}

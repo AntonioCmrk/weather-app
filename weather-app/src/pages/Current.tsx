@@ -2,9 +2,7 @@ import { Card, Col, Radio, RadioChangeEvent, Row, Space } from "antd";
 import { useState } from "react";
 import "./Current.css";
 
-export const Current = ({ weatherData }: any) => {
-  const [degreeUnit, setDegreeUnit] = useState<"C" | "F">("C");
-
+export const Current = ({ weatherData, unit, convertToF }: any) => {
   return weatherData?.code === "ERR_BAD_REQUEST" || weatherData === null ? (
     <h1>Please enter valid city name</h1>
   ) : (
@@ -43,11 +41,21 @@ export const Current = ({ weatherData }: any) => {
                       height="24"
                       width="24"
                     />
-                    {Math.round(weatherData.currentConditions.temp)}°C
+                    {unit === "C"
+                      ? Math.round(weatherData.currentConditions.temp)
+                      : Math.round(
+                          convertToF(weatherData.currentConditions.temp)
+                        )}
+                    °{unit}
                   </div>
                   <div>
                     RealFeel{" "}
-                    {Math.round(weatherData.currentConditions.feelslike)}°C
+                    {unit === "C"
+                      ? Math.round(weatherData.currentConditions.feelslike)
+                      : Math.round(
+                          convertToF(weatherData.currentConditions.feelslike)
+                        )}
+                    °{unit}
                   </div>
                 </div>
               </div>

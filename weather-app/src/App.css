@@ -35,3 +35,8 @@
 .ant-menu-light.ant-menu-horizontal > .ant-menu-item:hover::after {
   border-bottom: none !important;
 }
+
+.ant-radio-button-wrapper-checked {
+  background: #9c9c9c !important;
+  border-color: #2b2b2b;
+}
