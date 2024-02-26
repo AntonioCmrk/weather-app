@@ -1,65 +1,38 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
-import { Layout, Radio } from "antd";
+import { Layout, Radio, RadioChangeEvent } from "antd";
 import { Content, Footer } from "antd/es/layout/layout";
 import NavigationBar from "./components/NavigationBar";
 import MyFooter from "./components/Footer";
 import NavigationRoutes from "./components/NavigationRoutes";
 import { SearchPlace } from "./components/SearchPlace";
-import type { SearchProps } from "antd/es/input/Search";
-import axios from "axios";
 import weather from "./assets/weather_example.json";
-
-const APIKey2 = "16d9bb2e385b3eb15c7c30e7349e44b6";
-const APIKey = "9B6QVFSDBPLEPQ6JQK7K4ADRA";
+import { searchData, tempC, Unit, Weather } from "./types";
+import { contentStyle, footerStyle, layoutStyle } from "./Styles";
+import { fetchWeather } from "./api/WeatherAPI";
 
 function App() {
-  const [place, setPlace] = useState<string>("Osijek");
-  const [weatherData, setWeatherData] = useState<any>(null);
-  const [unit, setUnit] = useState<"C" | "F">("C");
+  const [place, setPlace] = useState<string | null>("Osijek");
+  const [weatherData, setWeatherData] = useState<Weather | null>(null);
+  const [unit, setUnit] = useState<Unit>("C");
 
   useEffect(() => {
-    axios
-      .get(
-        `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${place}/?unitGroup=metric&key=${APIKey}`
-        //`https://api.openweathermap.org/data/2.5/weather?q=${place}&units=metric&appid=${APIKey2}`
-      )
+    //setWeatherData(weather);
+    fetchWeather(place)
       .then((response) => {
         setWeatherData(response.data);
-        //setWeatherData(weather);
       })
       .catch((err) => {
         console.log(err);
         setWeatherData(err);
       });
   }, [place]);
-  console.log("weatherData", weatherData);
 
-  const contentStyle: React.CSSProperties = {
-    textAlign: "center",
-    minHeight: 120,
-    background:
-      "radial-gradient(circle, rgb(252, 250, 250) 0%, rgb(100, 100, 100) 100%)",
-  };
-
-  const footerStyle: React.CSSProperties = {
-    textAlign: "center",
-    marginTop: "auto",
-    backgroundColor: "#2b2b2b",
-    color: "#c9c9c9",
-  };
-
-  const layoutStyle = {
-    borderRadius: 8,
-    overflow: "hidden",
-  };
-
-  const handleOnSearchChange = (searchData: any) => {
+  const handleOnSearchChange = (searchData: searchData) => {
     setPlace(searchData.value);
-    console.log(searchData);
   };
 
-  const convertToF = (tempC: any) => {
+  const convertToF = (tempC: tempC) => {
     return (tempC * 9) / 5 + 32;
   };
 
@@ -72,7 +45,7 @@ function App() {
             { label: "C", value: "C" },
             { label: "F", value: "F" },
           ]}
-          onChange={({ target: { value } }: any) => {
+          onChange={({ target: { value } }: RadioChangeEvent) => {
             setUnit(value);
           }}
           value={unit}

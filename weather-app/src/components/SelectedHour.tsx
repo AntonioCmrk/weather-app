@@ -1,21 +1,40 @@
-import { Card, Col, Radio, RadioChangeEvent, Row, Space } from "antd";
-import { useState } from "react";
-import "./Current.css";
-import { WeatherUnitConvert } from "../types";
-import { WeatherProperties } from "../components/WeatherProperties";
+import { Button, Card, Col, Divider, Row, Space } from "antd";
+import { WeatherProperties } from "./WeatherProperties";
+import { LeftOutlined } from "@ant-design/icons";
+import { TSelectedHour } from "../types";
 
-export const Current = ({
+function SelectedHour({
   weatherData,
+  selectedDayDate,
+  selectedHour,
+  setSelectedHour,
   unit,
   convertToF,
-}: WeatherUnitConvert) => {
-  return weatherData?.code === "ERR_BAD_REQUEST" || weatherData === null ? (
-    <h1>Please enter valid city name</h1>
-  ) : (
-    <div>
+}: TSelectedHour) {
+  return (
+    <>
+      <Col span={20} offset={2}>
+        <Button
+          onClick={() => setSelectedHour(null)}
+          style={{ marginBottom: "3rem" }}
+        >
+          <LeftOutlined /> Back
+        </Button>
+      </Col>
       <Col span={20} offset={2}>
         <Card
-          title={weatherData.resolvedAddress}
+          title={
+            weatherData.resolvedAddress +
+            ", " +
+            selectedDayDate[2] +
+            "." +
+            selectedDayDate[1] +
+            "." +
+            selectedDayDate[0] +
+            "., " +
+            selectedHour.datetime.slice(0, 5) +
+            "h"
+          }
           style={{ marginBottom: "5rem" }}
         >
           <Row justify="space-around" align="middle">
@@ -30,7 +49,7 @@ export const Current = ({
               >
                 <img
                   className="col"
-                  src={require(`../assets/icons/${weatherData.currentConditions.icon}.svg`)}
+                  src={require(`../assets/icons/${selectedHour.icon}.svg`)}
                   height="150"
                   width="150"
                 />
@@ -48,19 +67,15 @@ export const Current = ({
                       width="24"
                     />
                     {unit === "C"
-                      ? Math.round(weatherData.currentConditions.temp)
-                      : Math.round(
-                          convertToF(weatherData.currentConditions.temp)
-                        )}
+                      ? Math.round(selectedHour.temp)
+                      : Math.round(convertToF(selectedHour.temp))}
                     °{unit}
                   </div>
                   <div>
                     RealFeel{" "}
                     {unit === "C"
-                      ? Math.round(weatherData.currentConditions.feelslike)
-                      : Math.round(
-                          convertToF(weatherData.currentConditions.feelslike)
-                        )}
+                      ? Math.round(selectedHour.feelslike)
+                      : Math.round(convertToF(selectedHour.feelslike))}
                     °{unit}
                   </div>
                 </div>
@@ -74,7 +89,7 @@ export const Current = ({
                   fontSize: "2rem",
                 }}
               >
-                {weatherData.description}
+                {selectedHour.conditions}
               </div>
             </Col>
             <Col
@@ -92,19 +107,19 @@ export const Current = ({
               <Space direction="vertical" align="baseline">
                 <WeatherProperties
                   title={"Wind speed"}
-                  data={weatherData.currentConditions.windspeed}
+                  data={selectedHour.windspeed}
                   icon={"wind-icon"}
                   unit={"km/h"}
                 />
                 <WeatherProperties
                   title={"Humidity"}
-                  data={weatherData.currentConditions.humidity}
+                  data={selectedHour.humidity}
                   icon={"humidity-icon"}
                   unit={"%"}
                 />
                 <WeatherProperties
                   title={"Precipitation"}
-                  data={weatherData.currentConditions.precip}
+                  data={selectedHour.precip}
                   icon={"precipitation"}
                   unit={"%"}
                 />
@@ -113,6 +128,8 @@ export const Current = ({
           </Row>
         </Card>
       </Col>
-    </div>
+    </>
   );
-};
+}
+
+export default SelectedHour;

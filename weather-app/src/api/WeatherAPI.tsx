@@ -1,8 +1,5 @@
 import axios from "axios";
 
-const APIKey = "16d9bb2e385b3eb15c7c30e7349e44b6";
-const APIKey2 = "9B6QVFSDBPLEPQ6JQK7K4ADRA";
-
 export const geoApiOptions = {
   method: "GET",
   headers: {
@@ -14,4 +11,12 @@ export const GEO_API_URL = "https://wft-geo-db.p.rapidapi.com/v1/geo";
 
 export const WEATHER_API_URL =
   "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${place}/?unitGroup=metric&key=${APIKey}";
+
 export const WEATHER_API_KEY = "9B6QVFSDBPLEPQ6JQK7K4ADRA";
+
+export const fetchWeather = async (place: string | null) => {
+  const response = await axios.get(
+    `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${place}/?unitGroup=metric&key=${WEATHER_API_KEY}`
+  );
+  return response;
+};
