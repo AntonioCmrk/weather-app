@@ -130,11 +130,9 @@ export interface CurrentConditions {
   moonphase: number;
 }
 
-export type tempC = number;
+export type TempC = number;
 
 export type Unit = "C" | "F";
-
-export type searchData = { label: string | null; value: string | null };
 
 export interface Place {
   id: number;
@@ -211,8 +209,12 @@ export type TSelectedDayFalse = {
   convertToF: ConvertToFFunction;
 };
 
-type ConvertToFFunction = (tempC: tempC) => number;
+type ConvertToFFunction = (tempC: TempC) => number;
 
 type FormatDateFunction = (date: string) => string;
 
-export type HandleOnSearchChangeFunction = (searchData: searchData) => void;
+export interface SearchProps {
+  onSearchChange: (data: SearchData) => void;
+}
+
+export type SearchData = { label: string | null; value: string | null } | null;

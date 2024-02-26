@@ -1,13 +1,12 @@
-import React, { useState } from "react";
-import Search from "antd/es/input/Search";
-import { AsyncPaginate, Response } from "react-select-async-paginate";
+import { useState } from "react";
+import { AsyncPaginate } from "react-select-async-paginate";
 import { GEO_API_URL, geoApiOptions } from "../api/WeatherAPI";
-import { Place, searchData, HandleOnSearchChangeFunction } from "../types";
+import { Place, SearchData, SearchProps } from "../types";
 
-export const SearchPlace = ({ onSearchChange }: any) => {
-  const [search, setSearch] = useState<searchData | null>(null);
+export const SearchPlace = ({ onSearchChange }: SearchProps) => {
+  const [search, setSearch] = useState<SearchData | null>(null);
 
-  const handleOnChange = (searchData: searchData | null) => {
+  const handleOnChange = (searchData: SearchData | null) => {
     setSearch(searchData);
     onSearchChange(searchData);
   };

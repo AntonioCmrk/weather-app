@@ -7,7 +7,7 @@ import MyFooter from "./components/Footer";
 import NavigationRoutes from "./components/NavigationRoutes";
 import { SearchPlace } from "./components/SearchPlace";
 import weather from "./assets/weather_example.json";
-import { searchData, tempC, Unit, Weather } from "./types";
+import { SearchData, TempC, Unit, Weather } from "./types";
 import { contentStyle, footerStyle, layoutStyle } from "./Styles";
 import { fetchWeather } from "./api/WeatherAPI";
 
@@ -28,11 +28,13 @@ function App() {
       });
   }, [place]);
 
-  const handleOnSearchChange = (searchData: searchData) => {
-    setPlace(searchData.value);
+  const handleOnSearchChange = (searchData: SearchData) => {
+    if (searchData !== null) {
+      setPlace(searchData.value);
+    }
   };
 
-  const convertToF = (tempC: tempC) => {
+  const convertToF = (tempC: TempC) => {
     return (tempC * 9) / 5 + 32;
   };
 
